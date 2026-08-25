@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../utils/api';
 
 function Feed() {
@@ -40,30 +41,32 @@ function Feed() {
               key={project._id}
               className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition"
             >
-              <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
-              <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                {project.description}
-              </p>
-              <div className="flex flex-wrap gap-2 mb-3">
-                {project.tags.map((tag, idx) => (
-                  <span
-                    key={idx}
-                    className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-                            <p className="text-xs text-gray-400 mb-2">by {project.userName}</p>
-              
-<a
-  href={project.githubLink}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="text-blue-500 text-sm hover:underline"
->
-  View on GitHub
-</a>
+              <Link to={`/project/${project._id}`} className="block">
+                <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
+                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                  {project.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {project.tags && project.tags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-400 mb-2">by {project.userName}</p>
+              </Link>
+              <a
+                href={project.githubLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-blue-500 text-sm hover:underline"
+              >
+                View on GitHub
+              </a>
             </div>
           ))}
         </div>
