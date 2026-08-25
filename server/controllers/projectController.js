@@ -1,6 +1,5 @@
 const Project = require('../models/Project');
 
-// CREATE a new project
 exports.createProject = async (req, res) => {
   try {
     const { title, description, tags, githubLink, liveDemoLink, userId, userName } = req.body;
@@ -26,7 +25,6 @@ exports.createProject = async (req, res) => {
   }
 };
 
-// GET all projects (most recent first)
 exports.getAllProjects = async (req, res) => {
   try {
     const projects = await Project.find().sort({ createdAt: -1 });
@@ -36,7 +34,6 @@ exports.getAllProjects = async (req, res) => {
   }
 };
 
-// GET a single project by ID
 exports.getProjectById = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -49,7 +46,6 @@ exports.getProjectById = async (req, res) => {
   }
 };
 
-// UPDATE a project (only owner should be able to, enforced later via middleware)
 exports.updateProject = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -57,10 +53,14 @@ exports.updateProject = async (req, res) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
+    if (project.userId !== req.user.uid) {
+      return res.status(403).json({ message: 'You are not authorized to edit this project' });
+    }
+
     const updatedProject = await Project.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
-      { new: true } // returns the updated document
+      { new: true }
     );
 
     res.status(200).json(updatedProject);
@@ -69,12 +69,15 @@ exports.updateProject = async (req, res) => {
   }
 };
 
-// DELETE a project
 exports.deleteProject = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
+    }
+
+    if (project.userId !== req.user.uid) {
+      return res.status(403).json({ message: 'You are not authorized to delete this project' });
     }
 
     await Project.findByIdAndDelete(req.params.id);
