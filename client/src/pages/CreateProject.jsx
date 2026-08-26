@@ -15,31 +15,57 @@ function CreateProject() {
   const [liveDemoLink, setLiveDemoLink] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [improving, setImproving] = useState(false);
+
+  const handleImproveDescription = async () => {
+    if (!description.trim()) {
+      setError('Write a rough description first, then improve it with AI.');
+      return;
+    }
+
+    setImproving(true);
+    setError('');
+    try {
+      const response = await api.post('/ai/improve-description', {
+        title,
+        description,
+      });
+      setDescription(response.data.improvedDescription);
+    } catch (err) {
+      setError('AI improvement failed. Please try again.');
+      console.error(err);
+    } finally {
+      setImproving(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
     if (!currentUser) {
       setError('You must be logged in to post a project.');
       return;
     }
 
     setLoading(true);
+    setError('');
+
     try {
-      await api.post('/projects', {
+      const tagsArray = tags.split(',').map((tag) => tag.trim()).filter(Boolean);
+      
+      const response = await api.post('/projects', {
         title,
         description,
-        tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
+        tags: tagsArray,
         category,
         githubLink,
-        liveDemoLink,
+        liveDemoLink: liveDemoLink || undefined,
         userId: currentUser.uid,
         userName: currentUser.displayName || currentUser.email,
       });
-      navigate('/projects');
+
+      navigate(`/project/${response.data._id}`);
     } catch (err) {
-      setError('Failed to create project. Please try again.');
+      setError(err.response?.data?.message || 'Failed to create project. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -51,8 +77,10 @@ function CreateProject() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <p className="text-gray-600">
           Please{' '}
-          <span className="text-blue-700 font-medium">log in</span> to post a
-          project.
+          <Link to="/auth" className="text-blue-700 font-medium hover:underline">
+            log in
+          </Link>{' '}
+          to post a project.
         </p>
       </div>
     );
@@ -75,14 +103,24 @@ function CreateProject() {
             required
           />
 
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={4}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
-            required
-          />
+          <div>
+            <textarea
+              placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={4}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
+              required
+            />
+            <button
+              type="button"
+              onClick={handleImproveDescription}
+              disabled={improving}
+              className="mt-2 text-xs bg-blue-50 text-blue-900 px-3 py-1.5 rounded-md hover:bg-blue-100 transition disabled:opacity-50"
+            >
+              {improving ? 'Improving...' : '✨ Improve with AI'}
+            </button>
+          </div>
 
           <input
             type="text"

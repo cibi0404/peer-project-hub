@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const projectRoutes = require('./routes/projectRoutes');
 const commentRoutes = require('./routes/commentRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/projects', projectRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/ai', aiRoutes);
+
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected successfully'))
