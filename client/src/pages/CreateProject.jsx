@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import api from '../utils/api';
 import toast from 'react-hot-toast';
+import api from '../utils/api';
 
 function CreateProject() {
   const { currentUser } = useAuth();
@@ -42,28 +42,25 @@ function CreateProject() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
     if (!currentUser) {
       setError('You must be logged in to post a project.');
       return;
     }
 
     setLoading(true);
-    setError('');
-
     try {
-      const tagsArray = tags.split(',').map((tag) => tag.trim()).filter(Boolean);
-      
-      const response = await api.post('/projects', {
+      await api.post('/projects', {
         title,
         description,
-        tags: tagsArray,
+        tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
         category,
         githubLink,
-        liveDemoLink: liveDemoLink || undefined,
+        liveDemoLink,
         userId: currentUser.uid,
         userName: currentUser.displayName || currentUser.email,
       });
-
       toast.success('Project posted!');
       navigate('/projects');
     } catch (err) {
