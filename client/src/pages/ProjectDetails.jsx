@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import SkillMatchBadge from '../components/SkillMatchBadge';
 import api from '../utils/api';
 
 function ProjectDetails() {
@@ -216,7 +217,7 @@ function ProjectDetails() {
 
               <p className="text-gray-600 mb-4">{project.description}</p>
 
-              <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-4">
                 {project.tags.map((tag, idx) => (
                   <span
                     key={idx}
@@ -227,8 +228,11 @@ function ProjectDetails() {
                 ))}
               </div>
 
-              <p className="text-sm text-gray-400 mb-3">by {project.userName}</p>
+              <div className="mb-3">
+                <SkillMatchBadge tags={project.tags} />
+              </div>
 
+              <p className="text-sm text-gray-400 mb-3">by {project.userName}</p>
               <div className="flex gap-4">
                 <a
                   href={project.githubLink}

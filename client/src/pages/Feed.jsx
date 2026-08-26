@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import SkillMatchBadge from '../components/SkillMatchBadge';
 import api from '../utils/api';
 
 const CATEGORIES = ['All', 'Web App', 'Mobile App', 'AI/ML', 'Game', 'Tool/Utility', 'Other'];
@@ -100,7 +101,7 @@ function Feed() {
                 <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                   {project.description}
                 </p>
-                <div className="flex flex-wrap gap-2 mb-3">
+               <div className="flex flex-wrap gap-2 mb-3">
                   {project.tags && project.tags.map((tag, idx) => (
                     <span
                       key={idx}
@@ -109,6 +110,9 @@ function Feed() {
                       {tag}
                     </span>
                   ))}
+                </div>
+                <div className="mb-2">
+                  <SkillMatchBadge tags={project.tags} />
                 </div>
                 <p className="text-xs text-gray-400 mb-2">by {project.userName}</p>
               </Link>
