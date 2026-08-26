@@ -90,7 +90,7 @@ function Feed() {
               key={project._id}
               className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition flex flex-col"
             >
-              <Link to={`/project/${project._id}`} className="block flex-grow">
+              <Link to={`/project/${project._id}`} className="block grow">
                 <div className="flex justify-between items-start mb-2">
                   <h2 className="text-xl font-semibold">{project.title}</h2>
                   <span className="bg-blue-50 text-blue-900 text-xs px-2 py-1 rounded-md shrink-0 ml-2">

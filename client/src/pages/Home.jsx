@@ -23,7 +23,7 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <section className="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20 px-6 text-center">
+      <section className="bg-linear-to-br from-blue-900 to-blue-700 text-white py-20 px-6 text-center">
         <h1 className="text-4xl sm:text-5xl font-bold mb-4">
           Peer Project Hub
         </h1>
