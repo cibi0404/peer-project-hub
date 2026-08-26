@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from 'firebase/auth';
 import { auth } from '../utils/firebase';
 
@@ -23,7 +24,8 @@ function Auth() {
 
     try {
       if (isSignup) {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, { displayName: name });
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
@@ -38,7 +40,7 @@ function Auth() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-blue-600 mb-6 text-center">
+        <h1 className="text-2xl font-bold text-blue-900 mb-6 text-center">
           {isSignup ? 'Create Account' : 'Welcome Back'}
         </h1>
 
@@ -49,7 +51,7 @@ function Auth() {
               placeholder="Full Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
               required
             />
           )}
@@ -59,7 +61,7 @@ function Auth() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
             required
           />
 
@@ -68,7 +70,7 @@ function Auth() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
             required
           />
 
@@ -79,7 +81,7 @@ function Auth() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white rounded-md py-2 text-sm font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+            className="w-full bg-blue-900 text-white rounded-md py-2 text-sm font-semibold hover:bg-blue-800 transition disabled:opacity-50"
           >
             {loading ? 'Please wait...' : isSignup ? 'Sign Up' : 'Log In'}
           </button>
@@ -89,7 +91,7 @@ function Auth() {
           {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
           <button
             onClick={() => setIsSignup(!isSignup)}
-            className="text-blue-600 hover:underline font-medium"
+            className="text-blue-700 hover:underline font-medium"
           >
             {isSignup ? 'Log In' : 'Sign Up'}
           </button>

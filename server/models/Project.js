@@ -10,8 +10,13 @@ const projectSchema = new mongoose.Schema({
     required: true,
   },
   tags: {
-    type: [String], // e.g. ["React", "MongoDB"]
+    type: [String],
     default: [],
+  },
+  category: {
+    type: String,
+    enum: ['Web App', 'Mobile App', 'AI/ML', 'Game', 'Tool/Utility', 'Other'],
+    default: 'Other',
   },
   githubLink: {
     type: String,
@@ -22,13 +27,13 @@ const projectSchema = new mongoose.Schema({
     default: '',
   },
   userId: {
-    type: String, // Firebase UID of the project owner
+    type: String,
     required: true,
   },
   userName: {
-    type: String, // display name, so we don't need to join with users
+    type: String,
     required: true,
   },
-}, { timestamps: true }); // adds createdAt, updatedAt automatically
+}, { timestamps: true });
 
 module.exports = mongoose.model('Project', projectSchema);

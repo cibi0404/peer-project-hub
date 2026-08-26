@@ -54,7 +54,7 @@ function ProjectDetails() {
       await api.post('/comments', {
         projectId: id,
         userId: currentUser.uid,
-        userName: currentUser.email,
+        userName: currentUser.displayName || currentUser.email,
         text: commentText.trim(),
       });
       setCommentText('');
@@ -110,7 +110,7 @@ function ProjectDetails() {
     setDeleting(true);
     try {
       await api.delete(`/projects/${id}`);
-      navigate('/');
+      navigate('/projects');
     } catch (err) {
       console.error(err);
       alert('Failed to delete project.');
@@ -125,8 +125,8 @@ function ProjectDetails() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-3xl mx-auto">
-        <Link to="/" className="text-sm text-blue-600 hover:underline mb-4 inline-block">
-          ← Back to Feed
+        <Link to="/projects" className="text-sm text-blue-700 hover:underline mb-4 inline-block">
+          ← Back to Projects
         </Link>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -136,14 +136,14 @@ function ProjectDetails() {
                 type="text"
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
                 required
               />
               <textarea
                 value={editDescription}
                 onChange={(e) => setEditDescription(e.target.value)}
                 rows={4}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
                 required
               />
               <input
@@ -151,14 +151,14 @@ function ProjectDetails() {
                 value={editTags}
                 onChange={(e) => setEditTags(e.target.value)}
                 placeholder="Tags (comma separated)"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
               />
               <input
                 type="url"
                 value={editGithubLink}
                 onChange={(e) => setEditGithubLink(e.target.value)}
                 placeholder="GitHub Repo Link"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
                 required
               />
               <input
@@ -166,14 +166,14 @@ function ProjectDetails() {
                 value={editLiveDemoLink}
                 onChange={(e) => setEditLiveDemoLink(e.target.value)}
                 placeholder="Live Demo Link (optional)"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700"
               />
 
               <div className="flex gap-2">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="bg-blue-600 text-white text-sm px-4 py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+                  className="bg-blue-900 text-white text-sm px-4 py-2 rounded-md hover:bg-blue-800 transition disabled:opacity-50"
                 >
                   {saving ? 'Saving...' : 'Save Changes'}
                 </button>
@@ -189,7 +189,12 @@ function ProjectDetails() {
           ) : (
             <>
               <div className="flex justify-between items-start mb-2">
-                <h1 className="text-2xl font-bold">{project.title}</h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-2xl font-bold">{project.title}</h1>
+                  <span className="bg-blue-50 text-blue-900 text-xs px-2 py-1 rounded-md">
+                    {project.category}
+                  </span>
+                </div>
                 {isOwner && (
                   <div className="flex gap-2 shrink-0 ml-4">
                     <button
@@ -215,7 +220,7 @@ function ProjectDetails() {
                 {project.tags.map((tag, idx) => (
                   <span
                     key={idx}
-                    className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full"
+                    className="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-full"
                   >
                     {tag}
                   </span>
@@ -229,7 +234,7 @@ function ProjectDetails() {
                   href={project.githubLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-500 text-sm hover:underline"
+                  className="text-blue-700 text-sm hover:underline"
                 >
                   View on GitHub
                 </a>
@@ -238,7 +243,7 @@ function ProjectDetails() {
                     href={project.liveDemoLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 text-sm hover:underline"
+                    className="text-blue-700 text-sm hover:underline"
                   >
                     Live Demo
                   </a>
@@ -260,19 +265,19 @@ function ProjectDetails() {
                 onChange={(e) => setCommentText(e.target.value)}
                 placeholder="Leave a comment..."
                 rows={3}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700 mb-2"
               />
               <button
                 type="submit"
                 disabled={posting || !commentText.trim()}
-                className="bg-blue-600 text-white text-sm px-4 py-1.5 rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+                className="bg-blue-900 text-white text-sm px-4 py-1.5 rounded-md hover:bg-blue-800 transition disabled:opacity-50"
               >
                 {posting ? 'Posting...' : 'Post Comment'}
               </button>
             </form>
           ) : (
             <p className="text-sm text-gray-500 mb-6">
-              <Link to="/auth" className="text-blue-600 hover:underline">
+              <Link to="/auth" className="text-blue-700 hover:underline">
                 Log in
               </Link>{' '}
               to leave a comment.
