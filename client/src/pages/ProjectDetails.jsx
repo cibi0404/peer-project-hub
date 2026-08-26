@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import SkillMatchBadge from '../components/SkillMatchBadge';
 import api from '../utils/api';
+import toast from 'react-hot-toast';
 
 function ProjectDetails() {
   const { id } = useParams();
@@ -58,9 +59,10 @@ function ProjectDetails() {
         userName: currentUser.displayName || currentUser.email,
         text: commentText.trim(),
       });
-      setCommentText('');
+            setCommentText('');
       const commentsRes = await api.get(`/comments/${id}`);
       setComments(commentsRes.data);
+      toast.success('Comment posted!');
     } catch (err) {
       console.error(err);
     } finally {
@@ -94,8 +96,9 @@ function ProjectDetails() {
         githubLink: editGithubLink,
         liveDemoLink: editLiveDemoLink,
       });
-      setProject(response.data);
+        setProject(response.data);
       setIsEditing(false);
+      toast.success('Project updated!');
     } catch (err) {
       console.error(err);
       alert('Failed to update project.');
@@ -110,7 +113,8 @@ function ProjectDetails() {
 
     setDeleting(true);
     try {
-      await api.delete(`/projects/${id}`);
+          await api.delete(`/projects/${id}`);
+      toast.success('Project deleted');
       navigate('/projects');
     } catch (err) {
       console.error(err);

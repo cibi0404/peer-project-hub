@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
+import toast from 'react-hot-toast';
 
 function CreateProject() {
   const { currentUser } = useAuth();
@@ -63,9 +64,10 @@ function CreateProject() {
         userName: currentUser.displayName || currentUser.email,
       });
 
-      navigate(`/project/${response.data._id}`);
+      toast.success('Project posted!');
+      navigate('/projects');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create project. Please try again.');
+      setError('Failed to create project. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);

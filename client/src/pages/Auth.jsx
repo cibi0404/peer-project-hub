@@ -6,6 +6,7 @@ import {
   updateProfile,
 } from 'firebase/auth';
 import { auth } from '../utils/firebase';
+import toast from 'react-hot-toast';
 
 function Auth() {
   const [isSignup, setIsSignup] = useState(true);
@@ -29,6 +30,7 @@ function Auth() {
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
+      toast.success(isSignup ? 'Account created!' : 'Welcome back!');
       navigate('/');
     } catch (err) {
       setError(err.message);
