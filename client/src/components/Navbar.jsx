@@ -33,7 +33,7 @@ function Navbar() {
               >
                 + Post
               </Link>
-              <span className="text-sm text-gray-600 hidden sm:block max-w-[140px] truncate">
+              <span className="text-sm text-gray-600 hidden sm:block max-w-35 truncate">
                 {currentUser.displayName || currentUser.email}
               </span>
               <button
